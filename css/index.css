@@ -140,7 +140,7 @@ section {
   padding: 8rem 2rem 4rem;
   position: relative;
   overflow: hidden;
-  visibility: hidden;
+  display: none;
 }
 
 .hero-bg-shape {

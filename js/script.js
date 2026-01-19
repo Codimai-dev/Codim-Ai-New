@@ -8,7 +8,8 @@
 // ===================================
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger, TextPlugin, ScrollToPlugin);
-gsap.set(['.hero-section','.navbar'], { visibility: 'visible' });
+gsap.set(['.hero-section'], { display: 'flex' });
+gsap.set(['.navbar'], { display: 'block' });
 // ===================================
 // PAGE LOAD ANIMATION
 // ===================================
