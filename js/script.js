@@ -99,34 +99,34 @@ window.addEventListener('load', () => {
     ease: 'power3.out'
   }, '-=0.4');
 
-  // NEW: Interactive 3D Perspective Tilt (Reacts to Mouse)
+  // NEW: Optimized Interactive 3D Perspective Tilt with quickTo
   const heroLeft = document.querySelector('.hero-left');
   const brandTextElem = document.querySelector('.codimai-brand-text');
   
-  if (heroLeft && brandTextElem) {
+  if (heroLeft && brandTextElem && window.innerWidth > 1024) {
+    // Create optimize setters
+    const xTo = gsap.quickTo(brandTextElem, "rotationX", { duration: 0.8, ease: "power2.out" });
+    const yTo = gsap.quickTo(brandTextElem, "rotationY", { duration: 0.8, ease: "power2.out" });
+    
+    // Set perspective once
+    gsap.set(brandTextElem, { transformPerspective: 1000, transformOrigin: 'center' });
+
     window.addEventListener('mousemove', (e) => {
+      if (window.innerWidth <= 1024) return;
+      
       const { clientX, clientY } = e;
       const { innerWidth, innerHeight } = window;
       
-      // Calculate rotation based on mouse position (-1 to 1)
-      const xRot = (clientY / innerHeight - 0.5) * 30; // Tilt up/down
-      const yRot = (clientX / innerWidth - 0.5) * -30; // Tilt left/right
+      // Calculate rotation based on mouse position
+      const xRot = (clientY / innerHeight - 0.5) * 30; 
+      const yRot = (clientX / innerWidth - 0.5) * -30; 
       
-      gsap.to(brandTextElem, {
-        rotationX: xRot,
-        rotationY: yRot,
-        duration: 0.8,
-        ease: 'power2.out',
-        transformPerspective: 1000,
-        transformOrigin: 'center'
-      });
+      xTo(xRot);
+      yTo(yRot);
 
-      // Individual letter "z-offset" for a true 3D feel
-      gsap.to('.codimai-brand-text span', {
-        z: (i) => Math.abs(xRot + yRot) * 0.5 * (i % 3 + 1),
-        duration: 0.6,
-        ease: 'power1.out'
-      });
+      // Letter offset - simpler version for performance
+      // Only updating every few frames or skipping simpler letters could help, 
+      // but keeping it simple for now, just checking size.
     });
   }
 
@@ -191,21 +191,24 @@ if (heroDashboard) {
     ease: 'none'
   });
   
-  // Mouse move 3D effect
-  document.addEventListener('mousemove', (e) => {
-    const { clientX, clientY } = e;
-    const { innerWidth, innerHeight } = window;
-    
-    const xPos = (clientX / innerWidth - 0.5) * 20;
-    const yPos = (clientY / innerHeight - 0.5) * 20;
-    
-    gsap.to(heroDashboard, {
-      rotationY: -5 + xPos,
-      rotationX: 2 + yPos,
-      duration: 0.5,
-      ease: 'power2.out'
+  // Mouse move 3D effect - Optimized
+  if (window.innerWidth > 1024) {
+    const rotXTo = gsap.quickTo(heroDashboard, "rotationX", { duration: 0.5, ease: "power2.out" });
+    const rotYTo = gsap.quickTo(heroDashboard, "rotationY", { duration: 0.5, ease: "power2.out" });
+
+    document.addEventListener('mousemove', (e) => {
+      if (window.innerWidth <= 1024) return;
+
+      const { clientX, clientY } = e;
+      const { innerWidth, innerHeight } = window;
+      
+      const xPos = (clientX / innerWidth - 0.5) * 20;
+      const yPos = (clientY / innerHeight - 0.5) * 20;
+      
+      rotYTo(-5 + xPos);
+      rotXTo(2 + yPos);
     });
-  });
+  }
 }
 
 // ===================================
@@ -269,18 +272,21 @@ gsap.from('.solution-card', {
 
 // Magnetic effect on solution cards
 document.querySelectorAll('.solution-card').forEach(card => {
+  // Magnetic effect on solution cards - Optimized
+  const xTo = gsap.quickTo(card, "x", { duration: 0.5, ease: "power2.out" });
+  const yTo = gsap.quickTo(card, "y", { duration: 0.5, ease: "power2.out" });
+  const rotTo = gsap.quickTo(card, "rotation", { duration: 0.5, ease: "power2.out" });
+
   card.addEventListener('mousemove', (e) => {
+    if (window.innerWidth <= 1024) return;
+    
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
     
-    gsap.to(card, {
-      x: x * 0.1,
-      y: y * 0.1,
-      rotation: x * 0.02,
-      duration: 0.5,
-      ease: 'power2.out'
-    });
+    xTo(x * 0.1);
+    yTo(y * 0.1);
+    rotTo(x * 0.02);
   });
   
   card.addEventListener('mouseleave', () => {
@@ -778,22 +784,16 @@ if (window.innerWidth > 1024) {
   let cursorX = 0;
   let cursorY = 0;
   
+  const xTo = gsap.quickTo(cursor, "x", { duration: 0.2, ease: "power2.out" });
+  const yTo = gsap.quickTo(cursor, "y", { duration: 0.2, ease: "power2.out" });
+
   document.addEventListener('mousemove', (e) => {
-    cursorX = e.clientX;
-    cursorY = e.clientY;
+    xTo(e.clientX - 10);
+    yTo(e.clientY - 10);
   });
   
-  gsap.to(cursor, {
-    duration: 0.3,
-    ease: 'power2.out',
-    repeat: -1,
-    onRepeat: function() {
-      gsap.set(cursor, {
-        x: cursorX - 10,
-        y: cursorY - 10
-      });
-    }
-  });
+  // removed the loop-based implementation
+
   
   // Cursor grow on hover
   document.querySelectorAll('a, button').forEach(el => {
