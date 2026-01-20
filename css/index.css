@@ -140,7 +140,8 @@ section {
   padding: 8rem 2rem 4rem;
   position: relative;
   overflow: hidden;
-  display: none;
+  opacity: 0;
+  /* display: none; */
 }
 
 .hero-bg-shape {
@@ -229,6 +230,7 @@ section {
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(227, 30, 36, 0.3);
+  opacity: 0;
 }
 
 .hero-cta::before {
