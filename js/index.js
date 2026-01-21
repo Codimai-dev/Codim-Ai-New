@@ -143,7 +143,7 @@ const observerOptions = {
   rootMargin: '0px 0px -100px 0px'
 };
 
-const fadeInElements = document.querySelectorAll('.feature-card, .solution-card, .why-card, .step-card');
+const fadeInElements = document.querySelectorAll('.feature-card, .solution-card, .why-card, .step-card, .about-images, .about-content');
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {

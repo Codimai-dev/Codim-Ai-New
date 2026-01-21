@@ -44,9 +44,9 @@
         <!-- Desktop nav links -->
         <ul class="nav-links desktop-nav">
           <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
-          <li class="nav-item"><a href="#products" class="nav-link">Products</a></li>
-          <li class="nav-item"><a href="#audience" class="nav-link">Solutions</a></li>
-          <li class="nav-item"><a href="#approach" class="nav-link">Why Us</a></li>
+          <li class="nav-item"><a href="products.html" class="nav-link">Products</a></li>
+
+          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
           <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
         </ul>
         <a href="contact.html" class="get-started-btn">Talk to Us</a>
@@ -64,10 +64,10 @@
         </div>
         <nav class="mobile-menu-nav">
           <ul class="mobile-nav-links">
-            <li class="mobile-nav-item"><a href="index.html" class="mobile-nav-link">Home</a></li>
-            <li class="mobile-nav-item"><a href="#products" class="mobile-nav-link">Products</a></li>
-            <li class="mobile-nav-item"><a href="#audience" class="mobile-nav-link">Solutions</a></li>
-            <li class="mobile-nav-item"><a href="#approach" class="mobile-nav-link">Why Us</a></li>
+            <li class="mobile-nav-item"><a href="index.html" class="mobile-nav-link active">Home</a></li>
+            <li class="mobile-nav-item"><a href="products.html" class="mobile-nav-link">Products</a></li>
+
+            <li class="mobile-nav-item"><a href="about.html" class="mobile-nav-link">About</a></li>
             <li class="mobile-nav-item"><a href="contact.html" class="mobile-nav-link">Contact</a></li>
           </ul>
           <div class="mobile-menu-footer">
@@ -149,7 +149,7 @@
           </p>
           <p style="font-size: 0.875rem; color: var(--gray-700); margin-top: 0.5rem;"><strong>Best for:</strong> Sales
             teams, founders, agencies</p>
-          <a href="https://superagent.codimai.com" class="read-more">Visit SuperAgent <i
+          <a href="https://superagent.codimai.com" class="read-more stretched-link" target="_blank">Visit SuperAgent <i
               class="fas fa-arrow-right"></i></a>
         </div>
 
@@ -161,7 +161,8 @@
             conversions.</p>
           <p style="font-size: 0.875rem; color: var(--gray-700); margin-top: 0.5rem;"><strong>Best for:</strong> SMBs,
             service businesses, support</p>
-          <a href="https://wp.codimai.com" class="read-more">Visit WP CodimAi <i class="fas fa-arrow-right"></i></a>
+          <a href="https://wp.codimai.com" class="read-more stretched-link" target="_blank">Visit WP CodimAi <i
+              class="fas fa-arrow-right"></i></a>
         </div>
 
         <!-- GEO -->
@@ -174,7 +175,8 @@
           </p>
           <p style="font-size: 0.875rem; color: var(--gray-700); margin-top: 0.5rem;"><strong>Status:</strong> In
             development</p>
-          <a href="contact.html" class="read-more">Join Early Access <i class="fas fa-arrow-right"></i></a>
+          <a href="contact.html" class="read-more stretched-link">Join Early Access <i
+              class="fas fa-arrow-right"></i></a>
         </div>
       </div>
     </div>
@@ -294,30 +296,43 @@
       <h2 class="showcase-title">One Ecosystem. Multiple Growth Levers.</h2>
       <p class="showcase-subtitle">CodimAi products are designed to work independently and together.</p>
 
-      <div
-        style="display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap; margin-top: 3rem;">
-        <div
-          style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);">
-          <i class="fas fa-magnet" style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem;"></i>
+      <div class="ecosystem-workflow">
+        <!-- Capture Leads -->
+        <div class="eco-card">
+          <div class="eco-icon"><i class="fas fa-magnet"></i></div>
           <h3>Capture Leads</h3>
         </div>
-        <i class="fas fa-arrow-right" style="color: red; font-size: 1.5rem;"></i>
-        <div
-          style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);">
-          <i class="fas fa-envelope-open-text"
-            style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem;"></i>
+
+        <div class="eco-arrow">
+          <i class="fas fa-arrow-down"></i>
+          <div class="flow-dot"></div>
+        </div>
+
+        <!-- SuperAgent -->
+        <div class="eco-card">
+          <div class="eco-icon"><i class="fas fa-envelope-open-text"></i></div>
           <h3>Follow Up (SuperAgent)</h3>
         </div>
-        <i class="fas fa-arrow-right" style="color: red; font-size: 1.5rem;"></i>
-        <div
-          style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);">
-          <i class="fab fa-whatsapp" style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem;"></i>
+
+        <div class="eco-arrow">
+          <i class="fas fa-arrow-down"></i>
+          <div class="flow-dot"></div>
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="eco-card">
+          <div class="eco-icon"><i class="fab fa-whatsapp"></i></div>
           <h3>Engage (WhatsApp)</h3>
         </div>
-        <i class="fas fa-arrow-right" style="color: red; font-size: 1.5rem;"></i>
-        <div
-          style="background: var(--white); padding: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100);">
-          <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--primary-red); margin-bottom: 1rem;"></i>
+
+        <div class="eco-arrow">
+          <i class="fas fa-arrow-down"></i>
+          <div class="flow-dot"></div>
+        </div>
+
+        <!-- GEO -->
+        <div class="eco-card">
+          <div class="eco-icon"><i class="fas fa-chart-line"></i></div>
           <h3>Rank (GEO)</h3>
         </div>
       </div>
@@ -342,7 +357,7 @@
       <p class="contact-subtitle" style="margin-bottom: 3rem;">Join forward-thinking founders and teams using CodimAi.
       </p>
 
-      <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+      <div style=" gap: 1.5rem; justify-content: center; flex-wrap: wrap;" class="cta-btn-container">
         <a href="#products" class="cta-btn" style="font-size: 1.1rem; padding: 1rem 2.5rem;">Explore Our Products</a>
         <a href="contact.html" class="cta-btn"
           style="background: white; color: var(--primary-red); border: 1px solid var(--primary-red); font-size: 1.1rem; padding: 1rem 2.5rem;">Contact
@@ -361,9 +376,14 @@
           </a>
           <p class="brand-tagline">Building AI Products That Solve Real Business Problems</p>
           <div class="social-links">
-            <a href="https://twitter.com/codimai" target="_blank" aria-label="Twitter"><i
-                class="fab fa-twitter"></i></a>
-            <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.facebook.com/people/CodimAi/61578209616406/" target="_blank" aria-label="Facebook"><i
+                class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/codimai" target="_blank" aria-label="X (Twitter)"><i
+                class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.instagram.com/codim.ai/" target="_blank" aria-label="Instagram"><i
+                class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/shivam-gupta-089518308/" target="_blank" aria-label="LinkedIn"><i
+                class="fab fa-linkedin-in"></i></a>
           </div>
         </div>
         <div class="footer-links">

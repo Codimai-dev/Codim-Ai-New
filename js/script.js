@@ -14,9 +14,10 @@ gsap.config({
   nullTargetWarn: false
 });
 
-// Set initial state - ensure display is correct but let opacity be handled by load animation
-gsap.set(['.hero-section'], { display: 'flex' });
-gsap.set(['.navbar'], { display: 'block' });
+// Set initial state
+gsap.set(['.navbar'], { opacity: 1 });
+gsap.set(['.hero-section'], { opacity: 0, display: 'flex' });
+gsap.set(['.cta-btn-container'], { display: 'flex' });
 
 // ===================================
 // UTILITY FUNCTIONS
@@ -58,16 +59,7 @@ function isInViewport(element) {
 window.addEventListener('load', () => {
   const tl = gsap.timeline();
   
-  // Navbar slides down - properly animate from opacity 0
-  tl.fromTo('.navbar', 
-    { y: -100, opacity: 0 },
-    {
-      y: 0,
-      opacity: 1,
-      duration: 0.6,
-      ease: 'power2.out'
-    }
-  );
+  // Navbar is now static - no entrance animation
   
   // Split text for brand animation - OPTIMIZED
   const brandText = document.querySelector('.codimai-brand-text');
@@ -76,13 +68,24 @@ window.addEventListener('load', () => {
     brandText.textContent = '';
     brandText.style.willChange = 'transform';
     
-    text.split('').forEach(char => {
-      const span = document.createElement('span');
-      span.textContent = char;
-      span.style.display = 'inline-block';
-      span.style.opacity = '0';
-      span.style.willChange = 'transform, opacity';
-      brandText.appendChild(span);
+    // Split text into words, then characters to prevent word breaking
+    text.split(' ').forEach(word => {
+      const wordWrapper = document.createElement('span');
+      wordWrapper.style.display = 'inline-block';
+      wordWrapper.style.whiteSpace = 'nowrap';
+      
+      word.split('').forEach(char => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.classList.add('char-span');
+        span.style.display = 'inline-block';
+        span.style.opacity = '0';
+        span.style.willChange = 'transform, opacity';
+        wordWrapper.appendChild(span);
+      });
+      
+      brandText.appendChild(wordWrapper);
+      brandText.appendChild(document.createTextNode(' ')); // Maintain word spacing
     });
   }
 
@@ -97,13 +100,13 @@ window.addEventListener('load', () => {
     ease: 'power2.out'
   })
   // Simplified explosive reveal
-  .fromTo('.codimai-brand-text span', 
+  .fromTo('.char-span', 
     {
       opacity: 0,
       scale: 0,
-      x: () => (Math.random() - 0.5) * 300, // Reduced from 600
+      x: () => (Math.random() - 0.5) * 300, 
       y: () => (Math.random() - 0.5) * 300,
-      rotation: () => (Math.random() - 0.5) * 360, // Reduced from 720
+      rotation: () => (Math.random() - 0.5) * 360, 
     },
     {
       opacity: 1,
@@ -111,15 +114,15 @@ window.addEventListener('load', () => {
       x: 0,
       y: 0,
       rotation: 0,
-      duration: 1.5, // Slower (was 0.8)
+      duration: 1.5, 
       stagger: {
-        each: 0.05, // Slower stagger (was 0.02)
+        each: 0.05, 
         from: "center"
       },
       ease: 'power3.out',
       onComplete: () => {
         // Remove will-change after animation
-        document.querySelectorAll('.codimai-brand-text span').forEach(span => {
+        document.querySelectorAll('.char-span').forEach(span => {
           span.style.willChange = 'auto';
         });
       }
@@ -151,7 +154,7 @@ window.addEventListener('load', () => {
       stagger: 0.2,
       ease: 'power3.out' 
     }, '-=0.6')
-  .fromTo('.hero-right img', 
+  .fromTo('.hero-right img, .hero-3d-scene, .contact-3d-scene, .product-3d-scene', 
     { x: 30, opacity: 0, scale: 0.95 },
     {
       x: 0,
@@ -316,54 +319,35 @@ gsap.from('.feature-card', {
 // ===================================
 // SOLUTIONS/PRODUCTS - OPTIMIZED
 // ===================================
-gsap.from('.solution-card', {
-  scrollTrigger: {
-    trigger: '.solutions-section',
-    start: 'top 70%',
-    toggleActions: 'play none none none',
-    once: true
-  },
-  y: 80, // Reduced from 100
-  opacity: 0,
-  scale: 0.9, // Reduced from 0.8
-  duration: 0.8,
-  stagger: 0.15,
-  ease: 'power2.out'
-});
+// ===================================
+// SOLUTIONS/PRODUCTS - SIMPLE CSS ANIMATION
+// ===================================
 
-// SIMPLIFIED magnetic effect - only on hover, throttled
-document.querySelectorAll('.solution-card').forEach(card => {
-  let isHovering = false;
-  
-  const xTo = gsap.quickTo(card, "x", { duration: 0.3, ease: "power2.out" });
-  const yTo = gsap.quickTo(card, "y", { duration: 0.3, ease: "power2.out" });
-  
-  card.addEventListener('mouseenter', () => {
-    isHovering = true;
+// Simple Intersection Observer for Fade Up
+const observerOptions = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0.1
+};
+
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // Only animate once
+    }
   });
+}, observerOptions);
+
+document.querySelectorAll('.solution-card').forEach((card, index) => {
+  // Add base class for CSS animation
+  card.classList.add('fade-in-up');
   
-  card.addEventListener('mouseleave', () => {
-    isHovering = false;
-    gsap.to(card, {
-      x: 0,
-      y: 0,
-      duration: 0.4,
-      ease: 'power2.out'
-    });
-  });
+  // Add stagger delay via inline style
+  card.style.transitionDelay = `${index * 0.1}s`;
   
-  const handleCardMove = throttle((e) => {
-    if (!isHovering || window.innerWidth <= 1024) return;
-    
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    
-    xTo(x * 0.05); // Reduced from 0.1
-    yTo(y * 0.05);
-  }, 30);
-  
-  card.addEventListener('mousemove', handleCardMove);
+  // Start observing
+  observer.observe(card);
 });
 
 // ===================================
@@ -377,87 +361,83 @@ gsap.from('.why-card', {
     once: true
   },
   scale: 0,
-  rotation: 90, // Reduced from 180
+  rotation: 90, 
   opacity: 0,
   duration: 0.6,
   stagger: 0.1,
-  ease: 'back.out(1.4)' // Reduced from 1.7
+  ease: 'back.out(1.4)'
 });
 
 // ===================================
 // APPROACH SECTION - OPTIMIZED
 // ===================================
-const approachTl = gsap.timeline({
-  scrollTrigger: {
-    trigger: '.ai-approach-section',
-    start: 'top 70%',
-    toggleActions: 'play none none none',
-    once: true
+// ===================================
+// APPROACH SECTION - SIMPLE CSS ANIMATION
+// ===================================
+
+// Select elements to animate
+const approachElements = document.querySelectorAll('.content-side .section-tag, .content-side .main-heading, .content-side .description, .step-card');
+
+approachElements.forEach((el, index) => {
+  // Add base class for CSS animation
+  el.classList.add('fade-in-up');
+  
+  // Stagger functionality could be refined based on simple index or group
+  if (el.classList.contains('step-card')) {
+     const stepIndex = Array.from(document.querySelectorAll('.step-card')).indexOf(el);
+     el.style.transitionDelay = `${stepIndex * 0.15}s`;
+  } else {
+     el.style.transitionDelay = `${index * 0.1}s`;
   }
+  
+  observer.observe(el);
 });
 
-approachTl
-  .from('.content-side .section-tag', {
-    x: -80, // Reduced from -100
-    opacity: 0,
-    duration: 0.6
-  })
-  .from('.content-side .main-heading', {
-    x: -60,
-    opacity: 0,
-    duration: 0.6
-  }, '-=0.4')
-  .from('.content-side .description p', {
-    x: -40,
-    opacity: 0,
-    duration: 0.4,
-    stagger: 0.08
-  }, '-=0.4');
 
-// Step cards
-gsap.from('.step-card', {
-  scrollTrigger: {
-    trigger: '.steps-timeline',
-    start: 'top 80%',
-    toggleActions: 'play none none none',
-    once: true
-  },
-  x: 80, // Reduced from 100
-  opacity: 0,
-  scale: 0.9,
-  duration: 0.6,
-  stagger: 0.15,
-  ease: 'power2.out'
+// About Section Animation
+document.querySelectorAll('.about-images, .about-content').forEach((el) => {
+  el.classList.add('fade-in-up');
+  observer.observe(el);
+});
+
+// Contact Page Animation
+document.querySelectorAll('.contact-info-col, .contact-form-col, .method-card').forEach((el) => {
+  el.classList.add('fade-in-up');
+  observer.observe(el);
 });
 
 // REMOVED: Step icon rotation on scroll (expensive)
 // Use CSS hover instead
 
 // ===================================
-// INTEGRATIONS - OPTIMIZED
+// INTEGRATIONS - VERTICAL WORKFLOW
 // ===================================
-gsap.from('.integrations-showcase > div > div', {
-  scrollTrigger: {
-    trigger: '.integrations-showcase',
-    start: 'top 75%',
-    toggleActions: 'play none none none',
-    once: true
-  },
-  scale: 0,
-  opacity: 0,
-  duration: 0.5,
-  stagger: 0.1,
-  ease: 'back.out(1.5)'
-});
+gsap.fromTo('.eco-card, .eco-arrow', 
+  { y: 50, opacity: 0, scale: 0.9 },
+  {
+    scrollTrigger: {
+      trigger: '.integrations-showcase',
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+      once: true
+    },
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    duration: 0.8,
+    stagger: 0.2,
+    ease: 'power3.out'
+  }
+);
 
-// Simplified arrow animation
-gsap.to('.integrations-showcase .fa-arrow-right', {
-  x: 8, // Reduced from 10
-  duration: 1, // Slower
+// Animated down arrows
+gsap.to('.eco-arrow i', {
+  y: 10,
+  duration: 1.2,
   repeat: -1,
   yoyo: true,
   ease: 'power1.inOut',
-  stagger: 0.15
+  stagger: 0.2
 });
 
 // ===================================
@@ -466,25 +446,33 @@ gsap.to('.integrations-showcase .fa-arrow-right', {
 const contactTl = gsap.timeline({
   scrollTrigger: {
     trigger: '.contact-section',
-    start: 'top 80%',
+    start: 'top 90%', // More reliable trigger point
     toggleActions: 'play none none none',
     once: true
   }
 });
 
 contactTl
-  .from('.contact-title', {
-    y: 40,
-    opacity: 0,
-    duration: 0.6
-  })
-  .from('.cta-btn', {
-    scale: 0,
-    opacity: 0,
-    duration: 0.5,
-    stagger: 0.15,
-    ease: 'back.out(1.5)'
-  }, '-=0.3');
+  .fromTo('.contact-title', 
+    { y: 40, opacity: 0 },
+    {
+      y: 0,
+      opacity: 1,
+      duration: 0.6,
+      ease: 'power2.out'
+    }
+  )
+  .fromTo('.cta-btn', 
+    { scale: 0.8, opacity: 0 },
+    {
+      scale: 1,
+      opacity: 1,
+      duration: 0.5,
+      stagger: 0.15,
+      ease: 'back.out(1.5)'
+    }, 
+    '-=0.3'
+  );
 
 // ===================================
 // FOOTER - OPTIMIZED
@@ -503,19 +491,19 @@ gsap.from('.footer-grid > div', {
   ease: 'power2.out'
 });
 
-gsap.from('.social-links a', {
-  scrollTrigger: {
-    trigger: '.social-links',
-    start: 'top 90%',
-    toggleActions: 'play none none none',
-    once: true
-  },
-  scale: 0,
-  rotation: 180, // Reduced from 360
-  duration: 0.5,
-  stagger: 0.08,
-  ease: 'back.out(1.5)'
-});
+// gsap.from('.social-links a', {
+//   scrollTrigger: {
+//     trigger: '.social-links',
+//     start: 'top 90%',
+//     toggleActions: 'play none none none',
+//     once: true
+//   },
+//   scale: 0,
+//   rotation: 180, // Reduced from 360
+//   duration: 0.5,
+//   stagger: 0.08,
+//   ease: 'back.out(1.5)'
+// });
 
 // ===================================
 // NAVBAR SCROLL - OPTIMIZED
@@ -533,19 +521,7 @@ const updateNavbar = () => {
     navbar.classList.remove('scrolled');
   }
   
-  if (currentScroll > lastScroll && currentScroll > 100) {
-    gsap.to(navbar, {
-      y: -100,
-      duration: 0.3,
-      ease: 'power2.out'
-    });
-  } else {
-    gsap.to(navbar, {
-      y: 0,
-      duration: 0.3,
-      ease: 'power2.out'
-    });
-  }
+  // Keep navbar fixed at top, removed hide-on-scroll logic
   
   lastScroll = currentScroll;
   ticking = false;
@@ -651,34 +627,59 @@ const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
 let navTicking = false;
 
 const updateActiveNav = () => {
-  const scrollPosition = window.pageYOffset + navbar.offsetHeight + 100;
-  
-  sections.forEach(section => {
-    const sectionTop = section.offsetTop;
-    const sectionHeight = section.offsetHeight;
-    const sectionId = section.getAttribute('id');
-    
-    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+  const currentPath = window.location.pathname;
+  const currentPage = currentPath.split("/").pop() || 'index.html';
+  const isHomePage = currentPage === 'index.html' || currentPage === '';
+
+  if (isHomePage) {
+    const scrollPosition = window.pageYOffset + navbar.offsetHeight + 100;
+    let sectionActive = false;
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute('id');
+      
+      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        sectionActive = true;
+        navLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href === `#${sectionId}` || href === `index.html#${sectionId}`) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+
+    if (!sectionActive) {
       navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${sectionId}`) {
+        const href = link.getAttribute('href');
+        if (href === 'index.html' || href === '#' || href === './index.html') {
           link.classList.add('active');
+        } else {
+          link.classList.remove('active');
         }
       });
     }
-  });
-  
-  if (window.pageYOffset < 100) {
+  } else {
+    // On other pages, highlight the link that matches the current page filename
     navLinks.forEach(link => {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === 'index.html' || link.getAttribute('href') === '#') {
+      const href = link.getAttribute('href');
+      if (href === currentPage || href === `./${currentPage}`) {
         link.classList.add('active');
+      } else {
+        link.classList.remove('active');
       }
     });
   }
   
   navTicking = false;
 };
+
+// Initial call to set active state on load
+updateActiveNav();
 
 window.addEventListener('scroll', () => {
   if (!navTicking) {

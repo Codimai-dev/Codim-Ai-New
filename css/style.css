@@ -434,8 +434,7 @@
 .mobile-nav-link:focus,
 .get-started-btn:focus,
 .mobile-get-started-btn:focus {
-  outline: 2px solid var(--primary-red);
-  outline-offset: 2px;
+  outline: none;
 }
 
 /* Reduced motion preferences */
@@ -577,22 +576,11 @@
 
 .logo-link {
   display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.logo-link:hover {
-  transform: scale(1.05);
 }
 
 .footer-logo {
   height: 50px;
   width: auto;
-  /* filter: brightness(0) invert(1); */
-  transition: all 0.3s ease;
-}
-
-.logo-link:hover .footer-logo {
-  filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(227, 30, 36, 0.5));
 }
 
 .brand-tagline {
@@ -622,6 +610,8 @@
   border-radius: 50%;
   color: var(--gray-300);
   font-size: 1.125rem;
+  text-decoration: none; /* Ensure no underline */
+  line-height: 1; /* Fix vertical centering */
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -972,4 +962,7 @@
   .footer-section {
     background: linear-gradient(135deg, #000000 0%, #0A0A0A 100%);
   }
+}
+.cta-btn-container{
+  display: none;
 }
