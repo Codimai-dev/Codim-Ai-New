@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Blog posts collection
+    match /blogPosts/{blogId} {
+      // Allow read for all published blogs
+      allow read: if true; 
+      // Only authenticated admins can write
+      allow write: if request.auth != null;
+    }
+    
+    // Contact form submissions
+    match /contacts/{contactId} {
+      // Allow anyone to submit a contact form
+      allow create: if true;
+      // Only authenticated admins can read/manage submissions
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}
